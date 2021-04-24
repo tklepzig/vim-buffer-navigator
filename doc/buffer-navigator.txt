@@ -1,0 +1,4 @@
+*buffer-navigator.txt*	Display buffers as tree to quickly navigate between them.
+*buffer-navigator* *vim-buffer-navigator*
+
+tbd
