@@ -1,0 +1,15 @@
+let s:suite = themis#suite('BufferNavigator')
+let s:assert = themis#helper('assert')
+
+let s:scope = themis#helper('scope')
+let s:buffers = s:scope.funcs('buffers.vim')
+
+describe Map
+  it should map correctly without mutating the input list
+    let list = [1,2,3]
+    let mapped = s:buffers.Map({ k, v -> v + 1 }, list)
+    call s:assert.equals(mapped, [2,3,4])
+    call s:assert.equals(list, [1,2,3])
+  end
+end
+

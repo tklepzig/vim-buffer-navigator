@@ -2,3 +2,7 @@
 *buffer-navigator* *vim-buffer-navigator*
 
 tbd
+
+mapping
+commands
+which variables and highlight groups can be overriden
