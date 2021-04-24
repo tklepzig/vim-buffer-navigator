@@ -1,3 +1,6 @@
+let s:fileMarker = "\x07"
+let s:modifiedMarker = "\x06"
+
 " hide the file marker
 exec 'syntax match BufferNavigatorFileMarker #\%d' . char2nr(s:fileMarker) . '# conceal containedin=ALL'
 exec 'syntax match BufferNavigatorModifiedMarker #\%d' . char2nr(s:modifiedMarker) . '# conceal containedin=ALL'
