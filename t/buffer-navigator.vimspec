@@ -2,7 +2,7 @@ let s:suite = themis#suite('BufferNavigator')
 let s:assert = themis#helper('assert')
 
 let s:scope = themis#helper('scope')
-let s:buffers = s:scope.funcs('buffers.vim')
+let s:buffers = s:scope.funcs('plugin/buffer-navigator.vim')
 
 describe Map
   it should map correctly without mutating the input list
