@@ -1,40 +1,5 @@
-function! s:Map(fn, l)
-  let new_list = deepcopy(a:l)
-  call map(new_list, a:fn)
-  return new_list
-endfunction
-
-function! s:FindInList(list, fn)
-  for item in a:list
-    if a:fn(item)
-      return item
-    endif
-  endfor
-endfunction
-
-function! s:FindInDict(dict, fn)
-  for [key, value] in items(a:dict)
-    if a:fn(key, value)
-      return [key, value]
-    endif
-  endfor
-endfunction
-
-function! s:Flatten(list)
-  let val = []
-  for elem in a:list
-    if type(elem) == v:t_list
-      call extend(val, s:Flatten(elem))
-    else
-      call add(val, elem)
-    endif
-    unlet elem
-  endfor
-  return val
-endfunction
-
 let s:bufferLineMapping = {}
-let s:windowWidth = get(g:, 'BufferNavigatorWinWidth', 40)
+let s:optionWindowWidth = ['BufferNavigatorWinWidth', 40]
 let s:buffername = "buffer-navigator"
 let s:fileMarker = "\x07"
 let s:modifiedMarker = "\x06"
@@ -83,22 +48,22 @@ function! s:AppendChildren(pathSegments, buffer, k, v)
 endfunction
 
 function! s:TreeToLines(tree, startLineNr = 1, level = 0)
-  let text = ""
+  let lines = []
   let lineNr = a:startLineNr
   for item in a:tree
     let isLeaf = len(item.children) == 0
-    let text = text . repeat("  ", a:level) . (isLeaf ? s:fileMarker : "") . item.name . "\n"
+    call add(lines, repeat("  ", a:level) . (isLeaf ? s:fileMarker : "") . item.name)
     let s:bufferLineMapping[lineNr] = item.bufferNumbers
 
     if len(item.children) > 0
-      let [childrenText, newStartLineNr] = s:TreeToLines(item.children, lineNr + 1, a:level + 1)
-      let text = text . childrenText
+      let [childrenLines, newStartLineNr] = s:TreeToLines(item.children, lineNr + 1, a:level + 1)
+      let lines = lines + childrenLines
       let lineNr = newStartLineNr
     else
       let lineNr += 1
     endif
   endfor
-  return [text, lineNr]
+  return [lines, lineNr]
 endfunction
 
 function! s:BuildBufferList()
@@ -137,7 +102,8 @@ function! s:Open()
   let currentBufferNumber = bufnr("%")
   let currentBuffer = s:FindInDict(s:bufferLineMapping, { k, v -> len(v) == 1 && v[0] == currentBufferNumber })
 
-  aboveleft vnew|pu! = bufferliststr
+  aboveleft vnew
+  call setline(1, bufferliststr)
   execute 'file ' . s:buffername
 
   if type(currentBuffer) == v:t_list
@@ -145,7 +111,8 @@ function! s:Open()
     call setpos(".", [0, lineNr, 1])
   endif
 
-  execute "vertical resize " . s:windowWidth
+  let [winWidthName, winWidthDefault] = s:optionWindowWidth
+  execute "vertical resize " . get(g:,winWidthName, winWidthDefault)
 
   setlocal buftype=nofile bufhidden=wipe nowrap noswapfile
   setlocal readonly nomodifiable nobuflisted nonumber nofoldenable
@@ -160,8 +127,11 @@ function! s:Open()
 endfunction
 
 function! s:ToggleZoom()
-  if winwidth(0) > s:windowWidth
-  execute "vertical resize " . s:windowWidth
+  let [winWidthName, winWidthDefault] = s:optionWindowWidth
+  let winWith = get(g:,winWidthName, winWidthDefault)
+
+  if winwidth(0) > winWidth
+  execute "vertical resize " . winWidth
   else
     vertical resize
   endif
@@ -183,6 +153,41 @@ function! s:SelectBuffer(split = "")
       execute 'silent ' . a:split . 'buffer' bufnr
     endif
   endif
+endfunction
+
+function! s:Map(fn, l)
+  let new_list = deepcopy(a:l)
+  call map(new_list, a:fn)
+  return new_list
+endfunction
+
+function! s:FindInList(list, fn)
+  for item in a:list
+    if a:fn(item)
+      return item
+    endif
+  endfor
+endfunction
+
+function! s:FindInDict(dict, fn)
+  for [key, value] in items(a:dict)
+    if a:fn(key, value)
+      return [key, value]
+    endif
+  endfor
+endfunction
+
+function! s:Flatten(list)
+  let val = []
+  for elem in a:list
+    if type(elem) == v:t_list
+      call extend(val, s:Flatten(elem))
+    else
+      call add(val, elem)
+    endif
+    unlet elem
+  endfor
+  return val
 endfunction
 
 command! BufferNavigatorOpen :call <SID>Open()
