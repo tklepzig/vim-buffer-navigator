@@ -1,10 +1,21 @@
-# vim-buffer-navigator
+# Buffer Navigator
 
 Display buffers as tree to quickly navigate between them.
 
 ![BufferNavigator Screenshot](https://github.com/tklepzig/vim-buffer-navigator/raw/master/assets/screenshot.jpg)
 
-todo
-screenshots (normal, modified file)
-installation
-overview of usage, details can be found in [link to docs]
+## Installation
+
+tbd
+
+## Usage
+
+tbd
+
+## Settings
+
+tbd
+
+## Documentation
+
+You can view the manual with `:help buffer-navigator`.
