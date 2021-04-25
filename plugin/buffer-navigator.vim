@@ -95,7 +95,24 @@ function! s:Toggle()
   endif
 endfunction
 
+function! s:Focus()
+  let bufnr = bufnr(s:buffername)
+  if bufnr > 0 && bufexists(bufnr)
+    let targetWinNr = filter(range(1, winnr('$')), { i, winnr -> winbufnr(winnr) == bufnr })
+    if len(targetWinNr) > 0
+      " TODO: focus line with current open buffer (extract logic from Open())
+      execute targetWinNr[0] . 'wincmd w'
+    endif
+    echom tar
+  endif
+endfunction
+
 function! s:Open()
+  let bufnr = bufnr(s:buffername)
+  if bufnr > 0 && bufexists(bufnr)
+    return
+  endif
+
   let bufferlist = s:BuildBufferList()
   let [bufferliststr,_] = s:TreeToLines(s:BuffersToTree(bufferlist))
 
@@ -192,6 +209,7 @@ endfunction
 
 command! BufferNavigatorOpen :call <SID>Open()
 command! BufferNavigatorClose :call <SID>Close()
+command! BufferNavigatorFocus :call <SID>Focus()
 command! BufferNavigatorToggle :call <SID>Toggle()
 
 nnoremap <silent> <leader>b :BufferNavigatorToggle<cr>
