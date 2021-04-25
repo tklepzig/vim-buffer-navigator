@@ -22,46 +22,54 @@ CONTENTS
 
     1. Installation         |buffer-navigator-installation|
     2. Usage                |buffer-navigator-usage|
-    3. Mappings             |buffer-navigator-mappings|
-    4. Commands             |buffer-navigator-commands|
-    5. Customization        |buffer-navigator-customization|
-    6. Changelog            |buffer-navigator-changelog|
-    7. License              |buffer-navigator-license|
-    8. Credits              |buffer-navigator-credits|
+        2.1. Commands       |buffer-navigator-commands|
+        2.2. Mappings       |buffer-navigator-mappings|
+    3. Customization        |buffer-navigator-customization|
+    4. Changelog            |buffer-navigator-changelog|
+    5. License              |buffer-navigator-license|
+    6. Credits              |buffer-navigator-credits|
 
 
 =====================================================================
-INSTALLATION                          *buffer-navigator-installation*
-
-
-
-=====================================================================
-USAGE                                        *buffer-navigator-usage*
+1. Installation                       *buffer-navigator-installation*
 
 
 
 =====================================================================
-MAPPINGS                                  *buffer-navigator-mappings*
+2. Usage                                     *buffer-navigator-usage*
 
+---------------------------------------------------------------------
+2.1 Commands                              *buffer-navigator-commands*
 
+:BufferNavigatorOpen
+:BufferNavigatorClose
+:BufferNavigatorFocus
+:BufferNavigatorToggle
+
+---------------------------------------------------------------------
+2.2 Mappings                              *buffer-navigator-mappings*
+
+Return/o - Switch to selected buffer
+s - Open selected buffer in split
+v - Open selected buffer in vertical split
+z - Toggle zoom (increase width of buffer navigator window to max width)
 
 =====================================================================
-COMMANDS                                  *buffer-navigator-commands*
+3. Customization                        *buffer-navigator-customization*
 
+let g:BufferNavigatorWinWidth = 40
 
+highlight BufferNavigatorFile
+highlight BufferNavigatorModifiedFile
+highlight BufferNavigatorDir
 
 =====================================================================
-CUSTOMIZATION                        *buffer-navigator-customization*
-
-which variables and highlight groups can be overriden
-
-=====================================================================
-CHANGELOG                                *buffer-navigator-changelog*
+4. Changelog                                *buffer-navigator-changelog*
 
 tbd
 
 =====================================================================
-LICENSE                                    *buffer-navigator-license*
+5. License                                    *buffer-navigator-license*
 
 MIT License
 
@@ -86,12 +94,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 =====================================================================
-CREDITS                                    *buffer-navigator-credits*
+6. Credits                                    *buffer-navigator-credits*
 
 
 Author: Thomas Klepzig (https://github.com/tklepzig)
 
-Thanks for reading the doc file till the end!
+Congratulations, you've read the help file till the end!
 I'm happy te receive feedback, whether positive or negativ,
 feature requests or whatever you like.
 Looking forward to hear from you!

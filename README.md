@@ -32,12 +32,39 @@ Display buffers as tree to quickly navigate between them.
 
 ## Usage
 
-tbd
+TBD
+
+The buffer navigator can be toggled by using the predefined mapping
+
+```
+<leader> b
+```
+
+or by using the command
+
+```vim
+:BufferNavigatorToggle
+```
+
+Inside the buffer tree the following mappings exists:
+
+- <kbd>Return</kbd> or <kbd>o</kbd> - Switch to the selected buffer
+- <kbd>s</kbd> - Like o, but opens in a split
+- <kbd>v</kbd> - Like o, but opens in a vertical split
+- <kbd>z</kbd> - Toggle zoom, which increases/decreases the width of the buffer window
 
 ## Customization
 
-tbd
+TBD
+
+```vim
+let g:BufferNavigatorWinWidth = 40
+
+highlight BufferNavigatorFile
+highlight BufferNavigatorModifiedFile
+highlight BufferNavigatorDir
+```
 
 ## Documentation
 
-You can view the manual with `:help buffer-navigator`.
+You can view the full manual with `:help buffer-navigator`.
