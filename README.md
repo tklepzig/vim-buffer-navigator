@@ -6,13 +6,35 @@ Display buffers as tree to quickly navigate between them.
 
 ## Installation
 
-tbd
+### [Vundle](https://github.com/gmarik/Vundle.vim)
+
+1.  Add the following configuration to your `.vimrc`.
+
+        Plugin 'tklepzig/vim-buffer-navigator'
+
+2.  Install with `:BundleInstall`.
+
+### [NeoBundle](https://github.com/Shougo/neobundle.vim)
+
+1.  Add the following configuration to your `.vimrc`.
+
+        NeoBundle 'tklepzig/vim-buffer-navigator'
+
+2.  Install with `:NeoBundleInstall`.
+
+### [Plug](https://github.com/junegunn/vim-plug)
+
+1.  Add the following configuration to your `.vimrc`.
+
+        Plug 'tklepzig/vim-buffer-navigator'
+
+2.  Install with `:PlugInstall`.
 
 ## Usage
 
 tbd
 
-## Settings
+## Customization
 
 tbd
 

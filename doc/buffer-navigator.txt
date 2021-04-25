@@ -24,7 +24,7 @@ CONTENTS
     2. Usage                |buffer-navigator-usage|
     3. Mappings             |buffer-navigator-mappings|
     4. Commands             |buffer-navigator-commands|
-    5. Settings             |buffer-navigator-settings|
+    5. Customization        |buffer-navigator-customization|
     6. Changelog            |buffer-navigator-changelog|
     7. License              |buffer-navigator-license|
     8. Credits              |buffer-navigator-credits|
@@ -51,7 +51,7 @@ COMMANDS                                  *buffer-navigator-commands*
 
 
 =====================================================================
-SETTINGS                                  *buffer-navigator-settings*
+CUSTOMIZATION                        *buffer-navigator-customization*
 
 which variables and highlight groups can be overriden
 
