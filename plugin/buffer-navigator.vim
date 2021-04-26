@@ -107,40 +107,37 @@ function! s:Focus()
   endif
 endfunction
 
+function! s:PrintLines()
+  let s:bufferLineMapping = {}
+  let bufferlist = s:BuildBufferList()
+  let [bufferLines, _] = s:TreeToLines(s:BuffersToTree(bufferlist), 1, 0)
+  call setline(1, bufferLines)
+endfunction
+
 function! s:Open()
   let bufnr = bufnr(s:buffername)
   if bufnr > 0 && bufexists(bufnr)
     return
   endif
 
-  let s:bufferLineMapping = {}
-  let bufferlist = s:BuildBufferList()
-  let [bufferliststr,_] = s:TreeToLines(s:BuffersToTree(bufferlist), 1, 0)
-
-  let currentBufferNumber = bufnr("%")
-  let currentBuffer = s:FindInDict(s:bufferLineMapping, { k, v -> len(v) == 1 && v[0] == currentBufferNumber })
-
   aboveleft vnew
-  call setline(1, bufferliststr)
   execute 'file ' . s:buffername
-
-  if type(currentBuffer) == v:t_list
-    let [lineNr,_] = currentBuffer
-    call setpos(".", [0, lineNr, 1])
-  endif
-
   let [winWidthName, winWidthDefault] = s:optionWindowWidth
   execute "vertical resize " . get(g:,winWidthName, winWidthDefault)
 
   setlocal buftype=nofile bufhidden=wipe nowrap noswapfile
-  setlocal readonly nomodifiable nobuflisted nonumber nofoldenable
+  setlocal nobuflisted nonumber nofoldenable
   setlocal filetype=buffernavigator
   setlocal conceallevel=2 concealcursor=nvic
+
+  call s:Refresh()
 
   nnoremap <script> <silent> <nowait> <buffer> <CR> :call <SID>SelectBuffer("")<CR>
   nnoremap <script> <silent> <nowait> <buffer> o    :call <SID>SelectBuffer("")<CR>
   nnoremap <script> <silent> <nowait> <buffer> v    :call <SID>SelectBuffer("vertical s")<CR>
   nnoremap <script> <silent> <nowait> <buffer> s    :call <SID>SelectBuffer("s")<CR>
+  nnoremap <script> <silent> <nowait> <buffer> r    :call <SID>Refresh()<CR>
+  nnoremap <script> <silent> <nowait> <buffer> x    :call <SID>CloseBuffer()<CR>
   nnoremap <script> <silent> <nowait> <buffer> z    :call <SID>ToggleZoom()<CR>
 endfunction
 
@@ -167,6 +164,28 @@ function! s:SelectBuffer(split)
   if bufnr > 0 && bufexists(bufnr)
     call s:Close()
     execute 'silent ' . a:split . 'buffer' bufnr
+  endif
+endfunction
+
+function! s:Refresh()
+  setlocal noreadonly modifiable
+  call deletebufline("%", 1, "$")
+  call s:PrintLines()
+  setlocal readonly nomodifiable
+
+  let currentBufferNumber = bufnr("#")
+  let currentBuffer = s:FindInDict(s:bufferLineMapping, { k, v -> len(v) == 1 && v[0] == currentBufferNumber })
+  if type(currentBuffer) == v:t_list
+    let [lineNr,_] = currentBuffer
+    call setpos(".", [0, lineNr, 1])
+  endif
+endfunction
+
+function! s:CloseBuffer()
+  let bufnr = s:BufNrFromCurrentLine()
+  if bufnr > 0 && bufexists(bufnr)
+    execute 'silent ' . 'bdelete' bufnr
+    call s:Refresh()
   endif
 endfunction
 
