@@ -12,7 +12,7 @@ function! s:BuffersToTree(buffers)
   return tree
 endfunction
 
-function! s:AddBufferToTree(buffer, tree = [])
+function! s:AddBufferToTree(buffer, tree)
   let pathSegments = split(a:buffer.name, "/")
 
   if len(pathSegments) == 1
@@ -26,7 +26,7 @@ function! s:AddBufferToTree(buffer, tree = [])
   let existingNode = s:FindInList(a:tree, { x -> x.name == pathSegments[0] })
 
   if type(existingNode) != v:t_dict
-    let children = s:AddBufferToTree(extend(a:buffer, { "name": join(pathSegments[1:], "/") }))
+    let children = s:AddBufferToTree(extend(a:buffer, { "name": join(pathSegments[1:], "/") }), [])
     return a:tree + [
           \{ "name": pathSegments[0],
           \  "bufferNumbers": s:Flatten(s:Map({ k, v -> v.bufferNumbers }, children)),
@@ -47,7 +47,7 @@ function! s:AppendChildren(pathSegments, buffer, k, v)
   return a:v
 endfunction
 
-function! s:TreeToLines(tree, startLineNr = 1, level = 0)
+function! s:TreeToLines(tree, startLineNr, level)
   let lines = []
   let lineNr = a:startLineNr
   for item in a:tree
@@ -114,7 +114,7 @@ function! s:Open()
   endif
 
   let bufferlist = s:BuildBufferList()
-  let [bufferliststr,_] = s:TreeToLines(s:BuffersToTree(bufferlist))
+  let [bufferliststr,_] = s:TreeToLines(s:BuffersToTree(bufferlist), 1, 0)
 
   let currentBufferNumber = bufnr("%")
   let currentBuffer = s:FindInDict(s:bufferLineMapping, { k, v -> len(v) == 1 && v[0] == currentBufferNumber })
@@ -136,8 +136,8 @@ function! s:Open()
   setlocal filetype=buffernavigator
   setlocal conceallevel=2 concealcursor=nvic
 
-  nnoremap <script> <silent> <nowait> <buffer> <CR> :call <SID>SelectBuffer()<CR>
-  nnoremap <script> <silent> <nowait> <buffer> o    :call <SID>SelectBuffer()<CR>
+  nnoremap <script> <silent> <nowait> <buffer> <CR> :call <SID>SelectBuffer("")<CR>
+  nnoremap <script> <silent> <nowait> <buffer> o    :call <SID>SelectBuffer("")<CR>
   nnoremap <script> <silent> <nowait> <buffer> v    :call <SID>SelectBuffer("vertical s")<CR>
   nnoremap <script> <silent> <nowait> <buffer> s    :call <SID>SelectBuffer("s")<CR>
   nnoremap <script> <silent> <nowait> <buffer> z    :call <SID>ToggleZoom()<CR>
@@ -161,7 +161,7 @@ function! s:Close()
   endif
 endfunction
 
-function! s:SelectBuffer(split = "")
+function! s:SelectBuffer(split)
   let lineNr = line(".")
   if has_key(s:bufferLineMapping, lineNr) && len(s:bufferLineMapping[lineNr]) == 1
     let bufnr = s:bufferLineMapping[lineNr][0]
