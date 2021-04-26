@@ -145,7 +145,7 @@ endfunction
 
 function! s:ToggleZoom()
   let [winWidthName, winWidthDefault] = s:optionWindowWidth
-  let winWith = get(g:,winWidthName, winWidthDefault)
+  let winWidth = get(g:,winWidthName, winWidthDefault)
 
   if winwidth(0) > winWidth
   execute "vertical resize " . winWidth
