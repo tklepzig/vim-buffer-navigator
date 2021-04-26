@@ -23,7 +23,7 @@ function! s:AddBufferToTree(buffer, tree)
           \]
   endif
 
-  let existingNode = s:FindInList(a:tree, { x -> x.name == pathSegments[0] })
+  let existingNode = s:FindInList(a:tree, { x -> x.name ==# pathSegments[0] })
 
   if type(existingNode) != v:t_dict
     let children = s:AddBufferToTree(extend(a:buffer, { "name": join(pathSegments[1:], "/") }), [])
@@ -38,7 +38,7 @@ function! s:AddBufferToTree(buffer, tree)
 endfunction
 
 function! s:AppendChildren(pathSegments, buffer, k, v)
-  if a:v.name == a:pathSegments[0]
+  if a:v.name ==# a:pathSegments[0]
     let children = s:AddBufferToTree(extend(a:buffer, { "name": join(a:pathSegments[1:], "/") }), a:v.children)
     return extend(a:v, {
           \ "bufferNumbers": s:Flatten(s:Map({ k, v -> v.bufferNumbers }, children)),
