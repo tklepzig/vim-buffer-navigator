@@ -18,7 +18,7 @@ function! s:AddBufferToTree(buffer, tree)
   if len(pathSegments) == 1
     return a:tree + [
           \{ "name": (a:buffer.modified ? s:modifiedMarker : "") . pathSegments[0],
-          \  "bufferNumbers": [a:buffer.nr],
+          \  "bufferNumber": a:buffer.nr,
           \  "children": [] }
           \]
   endif
@@ -29,7 +29,7 @@ function! s:AddBufferToTree(buffer, tree)
     let children = s:AddBufferToTree(extend(a:buffer, { "name": join(pathSegments[1:], "/") }), [])
     return a:tree + [
           \{ "name": pathSegments[0],
-          \  "bufferNumbers": s:Flatten(s:Map({ k, v -> v.bufferNumbers }, children)),
+          \  "bufferNumber": s:Flatten(s:Map({ k, v -> v.bufferNumber }, children)),
           \  "children": children }
           \]
   endif
@@ -41,7 +41,7 @@ function! s:AppendChildren(pathSegments, buffer, k, v)
   if a:v.name ==# a:pathSegments[0]
     let children = s:AddBufferToTree(extend(a:buffer, { "name": join(a:pathSegments[1:], "/") }), a:v.children)
     return extend(a:v, {
-          \ "bufferNumbers": s:Flatten(s:Map({ k, v -> v.bufferNumbers }, children)),
+          \ "bufferNumber": s:Flatten(s:Map({ k, v -> v.bufferNumber }, children)),
           \ "children": children })
   endif
   return a:v
@@ -53,7 +53,7 @@ function! s:TreeToLines(tree, startLineNr, level)
   for item in a:tree
     let isLeaf = len(item.children) == 0
     call add(lines, repeat("  ", a:level) . (isLeaf ? s:fileMarker : "") . item.name)
-    let s:bufferLineMapping[lineNr] = item.bufferNumbers
+    let s:bufferLineMapping[lineNr] = item.bufferNumber
 
     if len(item.children) > 0
       let [childrenLines, newStartLineNr] = s:TreeToLines(item.children, lineNr + 1, a:level + 1)
@@ -137,7 +137,7 @@ function! s:Open()
   nnoremap <script> <silent> <nowait> <buffer> v    :call <SID>SelectBuffer("vertical s")<CR>
   nnoremap <script> <silent> <nowait> <buffer> s    :call <SID>SelectBuffer("s")<CR>
   nnoremap <script> <silent> <nowait> <buffer> r    :call <SID>Refresh()<CR>
-  nnoremap <script> <silent> <nowait> <buffer> x    :call <SID>CloseBuffer()<CR>
+  nnoremap <script> <silent> <nowait> <buffer> x    :call <SID>CloseBuffers()<CR>
   nnoremap <script> <silent> <nowait> <buffer> z    :call <SID>ToggleZoom()<CR>
 endfunction
 
@@ -161,9 +161,15 @@ endfunction
 
 function! s:SelectBuffer(split)
   let bufnr = s:BufNrFromCurrentLine()
-  if bufnr > 0 && bufexists(bufnr)
+
+  if type(bufnr) == v:t_list && len(bufnr) > 1
+    return
+  endif
+
+  let nr = type(bufnr) == v:t_list ? bufnr[0] : bufnr
+  if nr > 0 && bufexists(nr)
     call s:Close()
-    execute 'silent ' . a:split . 'buffer' bufnr
+    execute 'silent ' . a:split . 'buffer' . nr
   endif
 endfunction
 
@@ -174,25 +180,24 @@ function! s:Refresh()
   setlocal readonly nomodifiable
 
   let currentBufferNumber = bufnr("#")
-  let currentBuffer = s:FindInDict(s:bufferLineMapping, { k, v -> len(v) == 1 && v[0] == currentBufferNumber })
+  let currentBuffer = s:FindInDict(s:bufferLineMapping, { k, v -> type(v) == v:t_number && v == currentBufferNumber })
   if type(currentBuffer) == v:t_list
     let [lineNr,_] = currentBuffer
     call setpos(".", [0, lineNr, 1])
   endif
 endfunction
 
-function! s:CloseBuffer()
+function! s:CloseBuffers()
   let bufnr = s:BufNrFromCurrentLine()
-  if bufnr > 0 && bufexists(bufnr)
-    execute 'silent ' . 'bdelete' bufnr
-    call s:Refresh()
-  endif
+  let bufnrs = type(bufnr) == v:t_number ? [bufnr] : bufnr
+  execute 'silent bdelete' . join(bufnrs, ' ')
+  call s:Refresh()
 endfunction
 
 function! s:BufNrFromCurrentLine()
   let lineNr = line(".")
-  if has_key(s:bufferLineMapping, lineNr) && len(s:bufferLineMapping[lineNr]) == 1
-    return s:bufferLineMapping[lineNr][0]
+  if has_key(s:bufferLineMapping, lineNr) 
+    return s:bufferLineMapping[lineNr]
   endif
   return -1
 endfunction
