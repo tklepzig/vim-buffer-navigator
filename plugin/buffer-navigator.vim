@@ -113,6 +113,7 @@ function! s:Open()
     return
   endif
 
+  let s:bufferLineMapping = {}
   let bufferlist = s:BuildBufferList()
   let [bufferliststr,_] = s:TreeToLines(s:BuffersToTree(bufferlist), 1, 0)
 
