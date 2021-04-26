@@ -163,14 +163,19 @@ function! s:Close()
 endfunction
 
 function! s:SelectBuffer(split)
+  let bufnr = s:BufNrFromCurrentLine()
+  if bufnr > 0 && bufexists(bufnr)
+    call s:Close()
+    execute 'silent ' . a:split . 'buffer' bufnr
+  endif
+endfunction
+
+function! s:BufNrFromCurrentLine()
   let lineNr = line(".")
   if has_key(s:bufferLineMapping, lineNr) && len(s:bufferLineMapping[lineNr]) == 1
-    let bufnr = s:bufferLineMapping[lineNr][0]
-    if bufnr > 0 && bufexists(bufnr)
-      call s:Close()
-      execute 'silent ' . a:split . 'buffer' bufnr
-    endif
+    return s:bufferLineMapping[lineNr][0]
   endif
+  return -1
 endfunction
 
 function! s:Map(fn, l)
