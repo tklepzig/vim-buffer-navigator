@@ -130,13 +130,13 @@ function! s:Open()
   setlocal filetype=buffernavigator
   setlocal conceallevel=2 concealcursor=nvic
 
-  call s:Refresh()
+  call s:Refresh(1)
 
   nnoremap <script> <silent> <nowait> <buffer> <CR> :call <SID>SelectBuffer("")<CR>
   nnoremap <script> <silent> <nowait> <buffer> o    :call <SID>SelectBuffer("")<CR>
   nnoremap <script> <silent> <nowait> <buffer> v    :call <SID>SelectBuffer("vertical s")<CR>
   nnoremap <script> <silent> <nowait> <buffer> s    :call <SID>SelectBuffer("s")<CR>
-  nnoremap <script> <silent> <nowait> <buffer> r    :call <SID>Refresh()<CR>
+  nnoremap <script> <silent> <nowait> <buffer> r    :call <SID>Refresh(1)<CR>
   nnoremap <script> <silent> <nowait> <buffer> x    :call <SID>CloseBuffers()<CR>
   nnoremap <script> <silent> <nowait> <buffer> z    :call <SID>ToggleZoom()<CR>
 endfunction
@@ -173,17 +173,22 @@ function! s:SelectBuffer(split)
   endif
 endfunction
 
-function! s:Refresh()
+function! s:Refresh(preselectCurrentBuffer)
+  let previousLineNr = line(".")
   setlocal noreadonly modifiable
   call deletebufline("%", 1, "$")
   call s:PrintLines()
   setlocal readonly nomodifiable
 
-  let currentBufferNumber = bufnr("#")
-  let currentBuffer = s:FindInDict(s:bufferLineMapping, { k, v -> type(v) == v:t_number && v == currentBufferNumber })
-  if type(currentBuffer) == v:t_list
-    let [lineNr,_] = currentBuffer
-    call setpos(".", [0, lineNr, 1])
+  if !a:preselectCurrentBuffer
+    call setpos(".", [0, previousLineNr, 1])
+  else
+    let currentBufferNumber = bufnr("#")
+    let currentBuffer = s:FindInDict(s:bufferLineMapping, { k, v -> type(v) == v:t_number && v == currentBufferNumber })
+    if type(currentBuffer) == v:t_list
+      let [lineNr,_] = currentBuffer
+      call setpos(".", [0, lineNr, 1])
+    endif
   endif
 endfunction
 
@@ -191,12 +196,12 @@ function! s:CloseBuffers()
   let bufnr = s:BufNrFromCurrentLine()
   let bufnrs = type(bufnr) == v:t_number ? [bufnr] : bufnr
   execute 'silent bdelete' . join(bufnrs, ' ')
-  call s:Refresh()
+  call s:Refresh(0)
 endfunction
 
 function! s:BufNrFromCurrentLine()
   let lineNr = line(".")
-  if has_key(s:bufferLineMapping, lineNr) 
+  if has_key(s:bufferLineMapping, lineNr)
     return s:bufferLineMapping[lineNr]
   endif
   return -1
