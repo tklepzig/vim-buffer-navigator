@@ -1,5 +1,6 @@
 let s:bufferLineMapping = {}
 let s:optionWindowWidth = ['BufferNavigatorWinWidth', 40]
+let s:optionMapKeys = ['BufferNavigatorMapKeys', 1]
 let s:buffername = "buffer-navigator"
 let s:fileMarker = "\x07"
 let s:modifiedMarker = "\x06"
@@ -104,7 +105,6 @@ function! s:Focus()
       " TODO: focus line with current open buffer (extract logic from Open())
       execute targetWinNr[0] . 'wincmd w'
     endif
-    echom tar
   endif
 endfunction
 
@@ -124,8 +124,7 @@ function! s:Open()
   let s:previousWinId = win_getid()
   aboveleft vnew
   execute 'file ' . s:buffername
-  let [winWidthName, winWidthDefault] = s:optionWindowWidth
-  execute "vertical resize " . get(g:,winWidthName, winWidthDefault)
+  execute "vertical resize " . get(g:,s:optionWindowWidth[0], s:optionWindowWidth[1])
 
   setlocal buftype=nofile bufhidden=wipe nowrap noswapfile
   setlocal nobuflisted nonumber nofoldenable
@@ -146,8 +145,7 @@ function! s:Open()
 endfunction
 
 function! s:ToggleZoom()
-  let [winWidthName, winWidthDefault] = s:optionWindowWidth
-  let winWidth = get(g:,winWidthName, winWidthDefault)
+  let winWidth = get(g:,s:optionWindowWidth[0], s:optionWindowWidth[1])
 
   if winwidth(0) > winWidth
   execute "vertical resize " . winWidth
@@ -188,14 +186,14 @@ function! s:SelectBuffer(split, preview)
   endif
 endfunction
 
-function! s:Refresh(preselectCurrentBuffer)
+function! s:Refresh(selectCurrentBuffer)
   let previousLineNr = line(".")
   setlocal noreadonly modifiable
   call deletebufline("%", 1, "$")
   call s:PrintLines()
   setlocal readonly nomodifiable
 
-  if !a:preselectCurrentBuffer
+  if !a:selectCurrentBuffer
     call setpos(".", [0, previousLineNr, 1])
   else
     let currentBufferNumber = bufnr("#")
@@ -262,4 +260,6 @@ command! BufferNavigatorClose :call <SID>Close()
 command! BufferNavigatorFocus :call <SID>Focus()
 command! BufferNavigatorToggle :call <SID>Toggle()
 
-nnoremap <silent> <leader>b :BufferNavigatorToggle<cr>
+if get(g:, s:optionMapKeys[0], s:optionMapKeys[1])
+  nnoremap <silent> <leader>b :BufferNavigatorToggle<cr>
+endif
