@@ -1,5 +1,5 @@
 let s:bufferLineMapping = {}
-let s:optionWindowWidth = ['BufferNavigatorWinWidth', 40]
+let s:optionWindowWidth = ['BufferNavigatorWidth', 40]
 let s:optionMapKeys = ['BufferNavigatorMapKeys', 1]
 let s:buffername = "buffer-navigator"
 let s:fileMarker = "\x07"
