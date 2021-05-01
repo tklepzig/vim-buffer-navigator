@@ -34,13 +34,23 @@ CONTENTS
 ===============================================================================
 Usage                                                  *buffer-navigator-usage*
 
+The Buffer Navigator allows you to see your open buffers visualized as
+tree. Additionally, you can switch to any buffer or close one or multiple ones.
+
 -------------------------------------------------------------------------------
 Commands                                            *buffer-navigator-commands*
 
-:BufferNavigatorOpen
-:BufferNavigatorClose
-:BufferNavigatorFocus
-:BufferNavigatorToggle
+:BufferNavigatorOpen                                     *:BufferNavigatorOpen*
+    TBD
+<
+:BufferNavigatorClose                                   *:BufferNavigatorClose*
+    TBD
+<
+:BufferNavigatorFocus                                   *:BufferNavigatorFocus*
+    TBD
+<
+:BufferNavigatorToggle                                 *:BufferNavigatorToggle*
+    TBD
 
 -------------------------------------------------------------------------------
 Mappings                                            *buffer-navigator-mappings*
