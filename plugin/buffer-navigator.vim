@@ -3,6 +3,7 @@ let s:optionWindowWidth = ['BufferNavigatorWinWidth', 40]
 let s:buffername = "buffer-navigator"
 let s:fileMarker = "\x07"
 let s:modifiedMarker = "\x06"
+let s:previousWinId = -1
 
 function! s:BuffersToTree(buffers)
   let tree = []
@@ -120,6 +121,7 @@ function! s:Open()
     return
   endif
 
+  let s:previousWinId = win_getid()
   aboveleft vnew
   execute 'file ' . s:buffername
   let [winWidthName, winWidthDefault] = s:optionWindowWidth
@@ -132,10 +134,12 @@ function! s:Open()
 
   call s:Refresh(1)
 
-  nnoremap <script> <silent> <nowait> <buffer> <CR> :call <SID>SelectBuffer("")<CR>
-  nnoremap <script> <silent> <nowait> <buffer> o    :call <SID>SelectBuffer("")<CR>
-  nnoremap <script> <silent> <nowait> <buffer> v    :call <SID>SelectBuffer("vertical s")<CR>
-  nnoremap <script> <silent> <nowait> <buffer> s    :call <SID>SelectBuffer("s")<CR>
+  " TODO: Use autocmd FileType?
+  nnoremap <script> <silent> <nowait> <buffer> <CR> :call <SID>SelectBuffer("", 0)<CR>
+  nnoremap <script> <silent> <nowait> <buffer> o    :call <SID>SelectBuffer("", 0)<CR>
+  nnoremap <script> <silent> <nowait> <buffer> v    :call <SID>SelectBuffer("vertical s", 0)<CR>
+  nnoremap <script> <silent> <nowait> <buffer> s    :call <SID>SelectBuffer("s", 0)<CR>
+  nnoremap <script> <silent> <nowait> <buffer> p    :call <SID>SelectBuffer("", 1)<CR>
   nnoremap <script> <silent> <nowait> <buffer> r    :call <SID>Refresh(1)<CR>
   nnoremap <script> <silent> <nowait> <buffer> x    :call <SID>CloseBuffers()<CR>
   nnoremap <script> <silent> <nowait> <buffer> z    :call <SID>ToggleZoom()<CR>
@@ -155,11 +159,14 @@ endfunction
 function! s:Close()
   let bufnr = bufnr(s:buffername)
   if bufnr > 0 && bufexists(bufnr)
+    if s:previousWinId > 0
+      call win_gotoid(s:previousWinId)
+    endif
     execute 'bwipeout! ' . bufnr
   endif
 endfunction
 
-function! s:SelectBuffer(split)
+function! s:SelectBuffer(split, preview)
   let bufnr = s:BufNrFromCurrentLine()
 
   if type(bufnr) == v:t_list && len(bufnr) > 1
@@ -168,8 +175,16 @@ function! s:SelectBuffer(split)
 
   let nr = type(bufnr) == v:t_list ? bufnr[0] : bufnr
   if nr > 0 && bufexists(nr)
-    call s:Close()
-    execute 'silent ' . a:split . 'buffer' . nr
+    if s:previousWinId > 0
+      call win_execute(s:previousWinId, 'silent ' . a:split . 'buffer' . nr)
+    else
+      " is there any scenario where we have no lastWinNr?
+      "execute 'silent ' . a:split . 'buffer' . nr
+    endif
+
+      if !a:preview
+        call s:Close()
+      endif
   endif
 endfunction
 
