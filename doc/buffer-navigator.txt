@@ -1,4 +1,4 @@
-*buffer-navigator.txt*                                            Version 0.0.0
+*buffer-navigator.txt*                                            Version 1.0.0
 
   ____         __  __                                 ~
  |  _ \       / _|/ _|                                ~
@@ -22,13 +22,16 @@ Display |:buffers| as tree to quickly navigate between them.
 ===============================================================================
 CONTENTS
 
-    Usage                                      |buffer-navigator-usage|
-        Commands                               |buffer-navigator-commands|
-        Mappings                               |buffer-navigator-mappings|
-    Customization                              |buffer-navigator-customization|
-    Changelog                                  |buffer-navigator-changelog|
-    License                                    |buffer-navigator-license|
-    Credits                                    |buffer-navigator-credits|
+    Usage..................................|buffer-navigator-usage|
+        Commands...........................|buffer-navigator-commands|
+        Mappings...........................|buffer-navigator-mappings|
+        Global Mappings....................|buffer-navigator-global-mappings|
+    Customization..........................|buffer-navigator-customization|
+        Variables..........................|buffer-navigator-variables|
+        Highlight Groups...................|buffer-navigator-highlight-groups|
+    Changelog..............................|buffer-navigator-changelog|
+    License................................|buffer-navigator-license|
+    Credits................................|buffer-navigator-credits|
 
 
 ===============================================================================
@@ -41,38 +44,70 @@ tree. Additionally, you can switch to any buffer or close one or multiple ones.
 Commands                                            *buffer-navigator-commands*
 
 :BufferNavigatorOpen                                     *:BufferNavigatorOpen*
-    TBD
-<
+    Open the buffer navigator window if it is not open, otherwise nothing 
+    happens.
+
 :BufferNavigatorClose                                   *:BufferNavigatorClose*
-    TBD
-<
+    Close the buffer navigator window if it is open, otherwise nothing
+    happens.
+
 :BufferNavigatorFocus                                   *:BufferNavigatorFocus*
-    TBD
-<
+    Move the cursor to the buffer navigator window if it is open,
+    otherwise nothing happens.
+ 
 :BufferNavigatorToggle                                 *:BufferNavigatorToggle*
-    TBD
+   Show the buffer navigator window if it is not already open, otherwise
+   close it.
 
 -------------------------------------------------------------------------------
 Mappings                                            *buffer-navigator-mappings*
 
-Return/o - Switch to selected buffer
-s - Open selected buffer in split
-v - Open selected buffer in vertical split
-z - Toggle zoom (increase width of buffer navigator window to max width)
+o............Switch to selected buffer
+<CR>.........Same as o
+s............Open selected buffer in split
+v............Open selected buffer in vertical split
+p............Open buffer in preview mode (buffer navigator window stays open)
+x............Close selected buffer or tree
+z............Toggle zoom (increase width of buffer navigator window to max width)
+r............Refresh buffer tree
 
+-------------------------------------------------------------------------------
+Global Mappings                              *buffer-navigator-global-mappings*
+
+<leader>b....Toggle buffer navigator window
+
+This can be disabled by setting `g:BufferNavigatorMapKeys` to 0.
+    
 ===============================================================================
 Customization                                  *buffer-navigator-customization*
 
-let g:BufferNavigatorWinWidth = 40
+-------------------------------------------------------------------------------
+Variables                                          *buffer-navigator-variables*
 
-highlight BufferNavigatorFile
-highlight BufferNavigatorModifiedFile
-highlight BufferNavigatorDir
+let g:BufferNavigatorMapKeys                         *g:BufferNavigatorMapKeys*
+    Whether to create the |buffer-navigator-global-mappings|.
+    0 - Do not create any global mappings
+    1 - Create the global mappings (Default)
+ 
+let g:BufferNavigatorWidth                             *g:BufferNavigatorWidth*
+    Set the width of the buffer navigator window when not zoomed. Default: 40
+
+-------------------------------------------------------------------------------
+Highlight Groups                            *buffer-navigator-highlight-groups*
+
+highlight BufferNavigatorFile                      *BufferNavigatorFile* 
+    Use this highlight group to define how files are displayed.
+ 
+highlight BufferNavigatorModifiedFile             *BufferNavigatorModifiedFile*
+    Use this highlight group to define how modified files are displayed.
+ 
+highlight BufferNavigatorDir                               *BufferNavigatorDir*
+    Use this highlight group to define how directories are displayed.
 
 ===============================================================================
 Changelog                                          *buffer-navigator-changelog*
 
-tbd
+1.0.0 Initial release
 
 ===============================================================================
 License                                              *buffer-navigator-license*
@@ -107,5 +142,6 @@ Author: Thomas Klepzig (https://github.com/tklepzig)
 
 Congratulations, you've read the help file till the end!
 I'm happy te receive feedback, whether positive or negativ,
-feature requests or whatever you like.
+feature requests or whatever you like, simply create an issue at
+https://github.com/tklepzig/vim-buffer-navigator/issues.
 Looking forward to hear from you!

@@ -1,6 +1,7 @@
 # Buffer Navigator
 
-Display buffers as tree to quickly navigate between them.
+Display buffers as tree in a separate window. In it you can preview any buffer or switch directly to it.
+Additionally, you can close a single buffer or all inside a directory tree.
 
 ![BufferNavigator Screenshot](https://github.com/tklepzig/vim-buffer-navigator/raw/master/assets/screenshot.jpg)
 
@@ -32,33 +33,28 @@ Display buffers as tree to quickly navigate between them.
 
 ## Usage
 
-TBD
-
 The buffer navigator can be toggled by using either of these:
 
-- <kbd>leader</kbd> + <kbd>b</kbd>
+- <kbd>leader</kbd> + <kbd>b</kbd> (Can be disabled by setting `let g:BufferNavigatorMapKeys = 0`)
 - `:BufferNavigatorToggle`
 
 Inside the buffer tree the following mappings exists:
 
-- <kbd>Return</kbd> or <kbd>o</kbd> - Switch to the selected buffer
-- <kbd>s</kbd> - Like o, but opens in a split
-- <kbd>v</kbd> - Like o, but opens in a vertical split
-- <kbd>z</kbd> - Toggle zoom, which increases/decreases the width of the buffer window
-- <kbd>x</kbd> - Close selected buffer or the whole selected tree
-
-## Customization
-
-TBD
-
-```vim
-let g:BufferNavigatorWinWidth = 40
-
-highlight BufferNavigatorFile
-highlight BufferNavigatorModifiedFile
-highlight BufferNavigatorDir
-```
+| Key               | Function                                                             |
+| ----------------- | -------------------------------------------------------------------- |
+| <kbd>o</kbd>      | Switch to selected buffer                                            |
+| <kbd>Return</kbd> | Same as <kbd>o</kbd>                                                 |
+| <kbd>s</kbd>      | Open selected buffer in split                                        |
+| <kbd>v</kbd>      | Open selected buffer in vertical split                               |
+| <kbd>p</kbd>      | Open buffer in preview mode (buffer navigator window stays open)     |
+| <kbd>x</kbd>      | Close selected buffer or tree                                        |
+| <kbd>z</kbd>      | Toggle zoom (increase width of buffer navigator window to max width) |
+| <kbd>r</kbd>      | Refresh buffer tree                                                  |
 
 ## Documentation
 
-You can view the full manual with `:help buffer-navigator`.
+You can view the full manual (including customization options) with `:help buffer-navigator`.
+
+## Contribution
+
+Have a feature request or found a bug? Open an issue at https://github.com/tklepzig/vim-buffer-navigator/issues.
