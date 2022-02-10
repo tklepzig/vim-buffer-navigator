@@ -2,6 +2,7 @@ let s:bufferLineMapping = {}
 let s:optionWindowWidth = ['BufferNavigatorWidth', 40]
 let s:optionMapKeys = ['BufferNavigatorMapKeys', 1]
 let s:buffername = "buffer-navigator"
+let s:specialMarker = "\x08"
 let s:fileMarker = "\x07"
 let s:modifiedMarker = "\x06"
 let s:previousWinId = -1
@@ -19,7 +20,7 @@ function! s:AddBufferToTree(buffer, tree)
 
   if len(pathSegments) == 1
     return a:tree + [
-          \{ "name": (a:buffer.modified ? s:modifiedMarker : "") . pathSegments[0],
+          \{ "name": (a:buffer.modified ? s:modifiedMarker : "") . (stridx(pathSegments[0], "_spec") != -1 ? s:specialMarker : "") . pathSegments[0],
           \  "bufferNumber": a:buffer.nr,
           \  "children": [] }
           \]
