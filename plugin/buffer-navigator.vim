@@ -1,8 +1,8 @@
 let s:bufferLineMapping = {}
 let s:optionWindowWidth = ['BufferNavigatorWidth', 40]
+let s:optionHighlightRules = ['BufferNavigatorHighlightRules', []]
 let s:optionMapKeys = ['BufferNavigatorMapKeys', 1]
 let s:buffername = "buffer-navigator"
-let s:specialMarker = "\x08"
 let s:fileMarker = "\x07"
 let s:modifiedMarker = "\x06"
 let s:previousWinId = -1
@@ -20,7 +20,7 @@ function! s:AddBufferToTree(buffer, tree)
 
   if len(pathSegments) == 1
     return a:tree + [
-          \{ "name": (a:buffer.modified ? s:modifiedMarker : "") . (stridx(pathSegments[0], "_spec") != -1 ? s:specialMarker : "") . pathSegments[0],
+          \{ "name": (a:buffer.modified ? s:modifiedMarker : "") . pathSegments[0],
           \  "bufferNumber": a:buffer.nr,
           \  "children": [] }
           \]
@@ -264,3 +264,17 @@ command! BufferNavigatorToggle :call <SID>Toggle()
 if get(g:, s:optionMapKeys[0], s:optionMapKeys[1])
   nnoremap <silent> <leader>b :BufferNavigatorToggle<cr>
 endif
+
+" For doc:
+"let g:BufferNavigatorHighlightRules = [
+      "\["nameInCamelCase", "regexp", "ctermbg", "ctermfg", "guibg", "guifg"],
+      "\["rubySpecFile", ".*_spec\.rb", "NONE", "red", "NONE", "red"],
+      "\["markDownFile", ".*\.md", "NONE", "yellow", "NONE", "yellow"],
+      "\]
+
+for rule in get(g:,s:optionHighlightRules[0], s:optionHighlightRules[1])
+  let [name, regexp, ctermbg, ctermfg, guibg, guifg] = rule
+  exec 'autocmd filetype buffernavigator syntax match ' . name . ' "\v^\s*' . regexp . '$"'
+  exec 'autocmd filetype buffernavigator highlight ' . name . ' ctermbg='. ctermbg . ' ctermfg=' . ctermfg . ' guibg=' . guibg . ' guifg=' . guifg
+endfor
+
