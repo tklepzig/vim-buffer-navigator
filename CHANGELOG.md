@@ -1,1 +1,2 @@
-1.0.0 Initial release
+- 1.1.0 [Add option to define highlight rules](https://github.com/tklepzig/vim-buffer-navigator/pull/3)
+- 1.0.0 Initial release

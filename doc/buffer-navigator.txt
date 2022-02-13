@@ -122,7 +122,8 @@ highlight BufferNavigatorDir                               *BufferNavigatorDir*
 ===============================================================================
 Changelog                                          *buffer-navigator-changelog*
 
-1.0.0 Initial release
+- 1.1.0 Add option to define highlight rules
+- 1.0.0 Initial release
 
 ===============================================================================
 License                                              *buffer-navigator-license*
