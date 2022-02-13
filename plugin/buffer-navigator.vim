@@ -1,5 +1,6 @@
 let s:bufferLineMapping = {}
 let s:optionWindowWidth = ['BufferNavigatorWidth', 40]
+let s:optionHighlightRules = ['BufferNavigatorHighlightRules', []]
 let s:optionMapKeys = ['BufferNavigatorMapKeys', 1]
 let s:buffername = "buffer-navigator"
 let s:fileMarker = "\x07"
@@ -263,3 +264,10 @@ command! BufferNavigatorToggle :call <SID>Toggle()
 if get(g:, s:optionMapKeys[0], s:optionMapKeys[1])
   nnoremap <silent> <leader>b :BufferNavigatorToggle<cr>
 endif
+
+for rule in get(g:,s:optionHighlightRules[0], s:optionHighlightRules[1])
+  let [name, regexp, ctermbg, ctermfg, guibg, guifg] = rule
+  exec 'autocmd filetype buffernavigator syntax match ' . name . ' "\v^\s*' . regexp . '$"'
+  exec 'autocmd filetype buffernavigator highlight ' . name . ' ctermbg='. ctermbg . ' ctermfg=' . ctermfg . ' guibg=' . guibg . ' guifg=' . guifg
+endfor
+

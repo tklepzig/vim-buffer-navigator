@@ -12,8 +12,8 @@ exec 'syntax match BufferNavigatorDir "\v^.*$"'
 exec 'syntax match BufferNavigatorFile #^\s*\%d' . char2nr(s:fileMarker) . '.*$#'
 
 " highlight modified files
-exec 'syntax match BufferNavigatorModifiedFile #^\s*\%d' . char2nr(s:fileMarker) . '\%d' . char2nr(s:modifiedMarker) . '.*$#'
+exec 'syntax match BufferNavigatorModifiedFile #^\s*\%d' . char2nr(s:fileMarker) . '\%d' . char2nr(s:modifiedMarker) . '.*$# containedin=ALL'
 
-highlight BufferNavigatorFile ctermbg=NONE ctermfg=Blue guibg=NONE guifg=Blue
+highlight BufferNavigatorFile ctermbg=NONE ctermfg=75 guibg=NONE guifg=Blue
 highlight BufferNavigatorModifiedFile ctermbg=NONE ctermfg=214 guibg=NONE guifg=Orange
 highlight BufferNavigatorDir ctermbg=NONE ctermfg=White guibg=NONE guifg=White
