@@ -265,13 +265,6 @@ if get(g:, s:optionMapKeys[0], s:optionMapKeys[1])
   nnoremap <silent> <leader>b :BufferNavigatorToggle<cr>
 endif
 
-" For doc:
-"let g:BufferNavigatorHighlightRules = [
-      "\["nameInCamelCase", "regexp", "ctermbg", "ctermfg", "guibg", "guifg"],
-      "\["rubySpecFile", ".*_spec\.rb", "NONE", "red", "NONE", "red"],
-      "\["markDownFile", ".*\.md", "NONE", "yellow", "NONE", "yellow"],
-      "\]
-
 for rule in get(g:,s:optionHighlightRules[0], s:optionHighlightRules[1])
   let [name, regexp, ctermbg, ctermfg, guibg, guifg] = rule
   exec 'autocmd filetype buffernavigator syntax match ' . name . ' "\v^\s*' . regexp . '$"'

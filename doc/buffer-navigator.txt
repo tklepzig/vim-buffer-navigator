@@ -92,6 +92,21 @@ let g:BufferNavigatorMapKeys                         *g:BufferNavigatorMapKeys*
 let g:BufferNavigatorWidth                             *g:BufferNavigatorWidth*
     Set the width of the buffer navigator window when not zoomed. Default: 40
 
+let g:BufferNavigatorHighlightRules           *g:BufferNavigatorHighlightRules*
+    Define rules how to highlight nodes defined by a regular expression.
+
+    A rule is defined by the following tuple:
+    ["ruleNameInCamelCase", "regexp", "ctermbg", "ctermfg", "guibg", "guifg"]
+
+    The variable g:BufferNavigatorHighlightRules accepts a list of these rules. Default: []
+
+    Example:
+
+    let g:BufferNavigatorHighlightRules = [
+        "\["rubySpecFile", ".*_spec\.rb", "NONE", "red", "NONE", "red"],
+        "\["markdownFile", ".*\.md", "NONE", "yellow", "NONE", "yellow"],
+        "\]
+
 -------------------------------------------------------------------------------
 Highlight Groups                            *buffer-navigator-highlight-groups*
 
