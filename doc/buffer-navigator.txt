@@ -103,9 +103,9 @@ let g:BufferNavigatorHighlightRules           *g:BufferNavigatorHighlightRules*
     Example:
 
     let g:BufferNavigatorHighlightRules = [
-        "\["rubySpecFile", ".*_spec\.rb", "NONE", "red", "NONE", "red"],
-        "\["markdownFile", ".*\.md", "NONE", "yellow", "NONE", "yellow"],
-        "\]
+        \["rubySpecFile", ".*_spec\.rb", "NONE", "red", "NONE", "red"],
+        \["markdownFile", ".*\.md", "NONE", "yellow", "NONE", "yellow"],
+        \]
 
 -------------------------------------------------------------------------------
 Highlight Groups                            *buffer-navigator-highlight-groups*
