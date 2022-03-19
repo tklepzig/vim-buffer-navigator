@@ -40,6 +40,9 @@ Usage                                                  *buffer-navigator-usage*
 The Buffer Navigator allows you to see your open buffers visualized as
 tree. Additionally, you can switch to any buffer or close one or multiple ones.
 
+When switching to the MRU (Most Recently Used) mode, the open buffers are
+visualized flat, sorted by the last usage.
+
 -------------------------------------------------------------------------------
 Commands                                            *buffer-navigator-commands*
 
@@ -68,8 +71,9 @@ s............Open selected buffer in split
 v............Open selected buffer in vertical split
 p............Open buffer in preview mode (buffer navigator window stays open)
 x............Close selected buffer or tree
-z............Toggle zoom (increase width of buffer navigator window to max width)
+z............Toggle zoom (increase buffer navigator width to maximum)
 r............Refresh buffer tree
+m............Switch between tree and MRU mode
 
 -------------------------------------------------------------------------------
 Global Mappings                              *buffer-navigator-global-mappings*
@@ -92,19 +96,27 @@ let g:BufferNavigatorMapKeys                         *g:BufferNavigatorMapKeys*
 let g:BufferNavigatorWidth                             *g:BufferNavigatorWidth*
     Set the width of the buffer navigator window when not zoomed. Default: 40
 
+let g:BufferNavigatorMode                               *g:BufferNavigatorMode*
+    Set the mode on startup. Default: "tree"
+
 let g:BufferNavigatorHighlightRules           *g:BufferNavigatorHighlightRules*
     Define rules how to highlight nodes defined by a regular expression.
 
     A rule is defined by the following tuple:
-    ["ruleNameInCamelCase", "regexp", "ctermbg", "ctermfg", "guibg", "guifg"]
+    ["ruleName", kind, "regexp", "ctermbg", "ctermfg", "guibg", "guifg"]
+    Where kind can be one of the following values:
+      - "file"
+      - "dir"
 
-    The variable g:BufferNavigatorHighlightRules accepts a list of these rules. Default: []
+    The variable g:BufferNavigatorHighlightRules accepts a list
+    of these rules. Default: []
 
     Example:
 
     let g:BufferNavigatorHighlightRules = [
-        \["rubySpecFile", ".*_spec\.rb", "NONE", "red", "NONE", "red"],
-        \["markdownFile", ".*\.md", "NONE", "yellow", "NONE", "yellow"],
+        \["RubySpecFile", "file", ".*_spec\.rb", "NONE", "red", "NONE", "red"],
+        \["MarkdownFile", "file", ".*\.md", "NONE", "blue", "NONE", "blue"],
+        \["SpecDir", "dir", "spec", "NONE", "yellow", "NONE", "yellow"],
         \]
 
 -------------------------------------------------------------------------------
@@ -122,8 +134,14 @@ highlight BufferNavigatorDir                               *BufferNavigatorDir*
 ===============================================================================
 Changelog                                          *buffer-navigator-changelog*
 
-- 1.1.0 Add option to define highlight rules
-- 1.0.0 Initial release
+- 2.0.0
+  - Add MRU mode
+  - BREAKING CHANGE: user-defined highlight rules got a new second parameter:
+    kind ("file" | "dir")
+- 1.1.0
+  - Add option to define highlight rules
+- 1.0.0
+  - Initial release
 
 ===============================================================================
 License                                              *buffer-navigator-license*
