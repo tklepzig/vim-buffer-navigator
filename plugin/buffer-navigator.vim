@@ -1,9 +1,10 @@
-let s:bufferLineMapping = {}
 let s:optionWindowWidth = ['BufferNavigatorWidth', 40]
 let s:optionHighlightRules = ['BufferNavigatorHighlightRules', []]
 let s:optionMode = ['BufferNavigatorMode', 'tree']
-let s:currentMode = get(g:,s:optionMode[0], s:optionMode[1])
 let s:optionMapKeys = ['BufferNavigatorMapKeys', 1]
+
+let s:bufferLineMapping = {}
+let s:currentMode = get(g:,s:optionMode[0], s:optionMode[1])
 let s:buffername = "buffer-navigator"
 let s:fileMarker = "\x07"
 let s:modifiedMarker = "\x06"

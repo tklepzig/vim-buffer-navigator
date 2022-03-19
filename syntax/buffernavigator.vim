@@ -20,4 +20,4 @@ endfor
 
 highlight BufferNavigatorFile ctermbg=NONE ctermfg=75 guibg=NONE guifg=Blue
 highlight BufferNavigatorModifiedFile ctermbg=NONE ctermfg=214 guibg=NONE guifg=Orange
-highlight BufferNavigatorDir ctermbg=NONE ctermfg=white guibg=NONE guifg=White
+highlight BufferNavigatorDir ctermbg=NONE ctermfg=White guibg=NONE guifg=White

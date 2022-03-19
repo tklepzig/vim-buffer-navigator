@@ -1,4 +1,4 @@
-*buffer-navigator.txt*                                            Version 1.0.0
+*buffer-navigator.txt*                                            Version 2.0.0
 
   ____         __  __                                 ~
  |  _ \       / _|/ _|                                ~
