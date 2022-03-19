@@ -1,7 +1,8 @@
-let s:currentMode = "mru"
 let s:bufferLineMapping = {}
 let s:optionWindowWidth = ['BufferNavigatorWidth', 40]
 let s:optionHighlightRules = ['BufferNavigatorHighlightRules', []]
+let s:optionMode = ['BufferNavigatorMode', 'tree']
+let s:currentMode = get(g:,s:optionMode[0], s:optionMode[1])
 let s:optionMapKeys = ['BufferNavigatorMapKeys', 1]
 let s:buffername = "buffer-navigator"
 let s:fileMarker = "\x07"
@@ -165,8 +166,15 @@ function! s:Open()
   nnoremap <script> <silent> <nowait> <buffer> s    :call <SID>SelectBuffer("s", 0)<CR>
   nnoremap <script> <silent> <nowait> <buffer> p    :call <SID>SelectBuffer("", 1)<CR>
   nnoremap <script> <silent> <nowait> <buffer> r    :call <SID>Refresh(1)<CR>
+  nnoremap <script> <silent> <nowait> <buffer> m    :call <SID>ToggleMode()<CR>
   nnoremap <script> <silent> <nowait> <buffer> x    :call <SID>CloseBuffers()<CR>
   nnoremap <script> <silent> <nowait> <buffer> z    :call <SID>ToggleZoom()<CR>
+endfunction
+
+function! s:ToggleMode()
+  let s:currentMode = s:currentMode == "tree" ? "mru" : "tree"
+  call setpos(".", [0, 1, 1])
+  call s:Refresh(1)
 endfunction
 
 function! s:ToggleZoom()
