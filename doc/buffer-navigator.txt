@@ -122,7 +122,7 @@ let g:BufferNavigatorHighlightRules           *g:BufferNavigatorHighlightRules*
 -------------------------------------------------------------------------------
 Highlight Groups                            *buffer-navigator-highlight-groups*
 
-highlight BufferNavigatorFile                      *BufferNavigatorFile* 
+highlight BufferNavigatorFile                             *BufferNavigatorFile* 
     Use this highlight group to define how files are displayed.
  
 highlight BufferNavigatorModifiedFile             *BufferNavigatorModifiedFile*
@@ -138,6 +138,7 @@ Changelog                                          *buffer-navigator-changelog*
   - Add MRU mode
   - BREAKING CHANGE: user-defined highlight rules got a new second parameter:
     kind ("file" | "dir")
+    see :h g:BufferNavigatorHighlightRules
 - 1.1.0
   - Add option to define highlight rules
 - 1.0.0
@@ -148,7 +149,7 @@ License                                              *buffer-navigator-license*
 
 MIT License
 
-Copyright (c) 2021 Thomas Klepzig
+Copyright (c) 2022 Thomas Klepzig
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
