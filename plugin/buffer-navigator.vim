@@ -1,7 +1,10 @@
-let s:bufferLineMapping = {}
 let s:optionWindowWidth = ['BufferNavigatorWidth', 40]
 let s:optionHighlightRules = ['BufferNavigatorHighlightRules', []]
+let s:optionMode = ['BufferNavigatorMode', 'tree']
 let s:optionMapKeys = ['BufferNavigatorMapKeys', 1]
+
+let s:bufferLineMapping = {}
+let s:currentMode = get(g:,s:optionMode[0], s:optionMode[1])
 let s:buffername = "buffer-navigator"
 let s:fileMarker = "\x07"
 let s:modifiedMarker = "\x06"
@@ -69,9 +72,9 @@ function! s:TreeToLines(tree, startLineNr, level)
   return [lines, lineNr]
 endfunction
 
-function! s:BuildBufferList()
+function! s:BuildBufferList(sortByLastOpened)
   redir => buffers
-  execute('silent ls')
+  execute('silent ls' . (a:sortByLastOpened ? ' t' : ''))
   redir END
 
   let bufferlist = []
@@ -109,9 +112,35 @@ function! s:Focus()
   endif
 endfunction
 
+function! s:PrintMRU()
+  let s:bufferLineMapping = {}
+  let bufferlist = s:BuildBufferList(1)
+  let currentBufferNumber = bufnr("#")
+  let lines = []
+  let lineNr = 1
+
+  for buffer in bufferlist
+    if buffer.nr == currentBufferNumber 
+      continue
+    endif
+
+    let pathSegments = split(buffer.name, "/")
+
+    if len(pathSegments) == 1
+      call add(lines, s:fileMarker . (buffer.modified ? s:modifiedMarker : "") . pathSegments[0])
+    else
+      call add(lines, pathSegments[-2] . "/" . s:fileMarker . (buffer.modified ? s:modifiedMarker : "") . pathSegments[-1])
+    endif
+
+    let s:bufferLineMapping[lineNr] = buffer.nr
+    let lineNr += 1
+  endfor
+  call setline(1, lines)
+endfunction
+
 function! s:PrintLines()
   let s:bufferLineMapping = {}
-  let bufferlist = s:BuildBufferList()
+  let bufferlist = s:BuildBufferList(0)
   let [bufferLines, _] = s:TreeToLines(s:BuffersToTree(bufferlist), 1, 0)
   call setline(1, bufferLines)
 endfunction
@@ -127,10 +156,7 @@ function! s:Open()
   execute 'file ' . s:buffername
   execute "vertical resize " . get(g:,s:optionWindowWidth[0], s:optionWindowWidth[1])
 
-  setlocal buftype=nofile bufhidden=wipe nowrap noswapfile
-  setlocal nobuflisted nonumber nofoldenable
   setlocal filetype=buffernavigator
-  setlocal conceallevel=2 concealcursor=nvic
 
   call s:Refresh(1)
 
@@ -141,8 +167,15 @@ function! s:Open()
   nnoremap <script> <silent> <nowait> <buffer> s    :call <SID>SelectBuffer("s", 0)<CR>
   nnoremap <script> <silent> <nowait> <buffer> p    :call <SID>SelectBuffer("", 1)<CR>
   nnoremap <script> <silent> <nowait> <buffer> r    :call <SID>Refresh(1)<CR>
+  nnoremap <script> <silent> <nowait> <buffer> m    :call <SID>ToggleMode()<CR>
   nnoremap <script> <silent> <nowait> <buffer> x    :call <SID>CloseBuffers()<CR>
   nnoremap <script> <silent> <nowait> <buffer> z    :call <SID>ToggleZoom()<CR>
+endfunction
+
+function! s:ToggleMode()
+  let s:currentMode = s:currentMode == "tree" ? "mru" : "tree"
+  call setpos(".", [0, 1, 1])
+  call s:Refresh(1)
 endfunction
 
 function! s:ToggleZoom()
@@ -191,10 +224,14 @@ function! s:Refresh(selectCurrentBuffer)
   let previousLineNr = line(".")
   setlocal noreadonly modifiable
   call deletebufline("%", 1, "$")
-  call s:PrintLines()
+  if s:currentMode == "tree"
+    call s:PrintLines()
+  else 
+    call s:PrintMRU()
+  endif
   setlocal readonly nomodifiable
 
-  if !a:selectCurrentBuffer
+  if !a:selectCurrentBuffer || s:currentMode == "mru"
     call setpos(".", [0, previousLineNr, 1])
   else
     let currentBufferNumber = bufnr("#")
@@ -264,10 +301,3 @@ command! BufferNavigatorToggle :call <SID>Toggle()
 if get(g:, s:optionMapKeys[0], s:optionMapKeys[1])
   nnoremap <silent> <leader>b :BufferNavigatorToggle<cr>
 endif
-
-for rule in get(g:,s:optionHighlightRules[0], s:optionHighlightRules[1])
-  let [name, regexp, ctermbg, ctermfg, guibg, guifg] = rule
-  exec 'autocmd filetype buffernavigator syntax match ' . name . ' "\v^\s*' . regexp . '$"'
-  exec 'autocmd filetype buffernavigator highlight ' . name . ' ctermbg='. ctermbg . ' ctermfg=' . ctermfg . ' guibg=' . guibg . ' guifg=' . guifg
-endfor
-
