@@ -11,9 +11,9 @@ exec 'syntax match BufferNavigatorModifiedFile #\m\%d' . s:fileMarker . '\%d' . 
 for rule in get(g:,s:optionHighlightRules[0], s:optionHighlightRules[1])
   let [name, kind, regexp, ctermbg, ctermfg, guibg, guifg] = rule
   if kind == "file"
-    exec 'syntax match ' . name . ' #\m\%d' . s:fileMarker . '' . regexp . '# containedin=BufferNavigatorFile'
+    exec 'syntax match ' . name . ' #\m\%d' . s:fileMarker . regexp . '# containedin=BufferNavigatorFile'
   elseif kind == "dir"
-    exec 'syntax match ' . name . ' #\m' . regexp . '#'
+    exec 'syntax match ' . name . ' #\m\s*' . regexp . '#'
   endif
   exec 'highlight ' . name . ' ctermbg='. ctermbg . ' ctermfg=' . ctermfg . ' guibg=' . guibg . ' guifg=' . guifg
 endfor
