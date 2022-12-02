@@ -50,6 +50,7 @@ Inside the buffer tree the following mappings exists:
 | <kbd>x</kbd>      | Close selected buffer or tree                                        |
 | <kbd>z</kbd>      | Toggle zoom (increase width of buffer navigator window to max width) |
 | <kbd>r</kbd>      | Refresh buffer tree                                                  |
+| <kbd>m</kbd>      | Toggle mode between tree and MRU                                     |
 
 ## Documentation
 
