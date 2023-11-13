@@ -207,11 +207,13 @@ function! s:SelectBuffer(split, preview)
 
   let nr = type(bufnr) == v:t_list ? bufnr[0] : bufnr
   if nr > 0 && bufexists(nr)
-    if s:previousWinId > 0
+    if s:previousWinId > 0 && win_gettype(s:previousWinId) != "unknown"
       call win_execute(s:previousWinId, 'silent ' . a:split . 'buffer' . nr)
     else
-      " is there any scenario where we have no lastWinNr?
-      "execute 'silent ' . a:split . 'buffer' . nr
+      " the previous window does not exist anymore (maybe because
+      " it was closed via 'x', ...), therefore open the buffer directly in the
+      " current window where the buffer navigator is open
+      execute 'silent ' . a:split . 'buffer' . nr
     endif
 
       if !a:preview

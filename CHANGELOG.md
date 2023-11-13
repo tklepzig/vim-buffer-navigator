@@ -1,3 +1,5 @@
+- 2.0.1
+  - Bugfix: Fix bug with opening buffers when the previous window has been closed
 - 2.0.0
   - [Add MRU mode](https://github.com/tklepzig/vim-buffer-navigator/pull/4)
   - BREAKING CHANGE: user-defined highlight rules got a new second parameter:
