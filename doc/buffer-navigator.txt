@@ -97,7 +97,9 @@ let g:BufferNavigatorWidth                             *g:BufferNavigatorWidth*
     Set the width of the buffer navigator window when not zoomed. Default: 40
 
 let g:BufferNavigatorMode                               *g:BufferNavigatorMode*
-    Set the mode on startup. Default: "tree"
+    Set the mode on startup.
+    "tree" - Show the open buffers as directory tree (Default)
+    "mru" - Show the open buffers as flat list, sorted by last opened
 
 let g:BufferNavigatorHighlightRules           *g:BufferNavigatorHighlightRules*
     Define rules how to highlight nodes defined by a regular expression.
@@ -119,6 +121,20 @@ let g:BufferNavigatorHighlightRules           *g:BufferNavigatorHighlightRules*
         \["SpecDir", "dir", "spec", "NONE", "yellow", "NONE", "yellow"],
         \]
 
+let g:BufferNavigatorAmbiguousDirNames     *g:BufferNavigatorAmbiguousDirNames*
+    Specify a list of directory names that are ambiguous. When in MRU mode and
+    the parent directory of a buffer matches one of the entries in the list,
+    the next parent directory name is printed as well. Does not affect the
+    tree view.
+
+    Example:
+
+    let g:BufferNavigatorAmbiguousDirNames = [ "Edit", "Read" ]
+
+    With the definition above, the buffer "Root/People/Edit/README.md"
+    will be displayed as "People/Edit/README.md" while
+    "Root/People/Foo/README.md" will be displayed as "Foo/README.md".
+
 -------------------------------------------------------------------------------
 Highlight Groups                            *buffer-navigator-highlight-groups*
 
@@ -134,6 +150,11 @@ highlight BufferNavigatorDir                               *BufferNavigatorDir*
 ===============================================================================
 Changelog                                          *buffer-navigator-changelog*
 
+- 2.1.0
+  - Add option to specify ambiguous directory names for the MRU mode
+- 2.0.1
+  - Bugfix: Fix bug with opening buffers when the previous window has been
+    closed
 - 2.0.0
   - Add MRU mode
   - BREAKING CHANGE: user-defined highlight rules got a new second parameter:
@@ -149,7 +170,7 @@ License                                              *buffer-navigator-license*
 
 MIT License
 
-Copyright (c) 2022 Thomas Klepzig
+Copyright (c) 2024 Thomas Klepzig
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
