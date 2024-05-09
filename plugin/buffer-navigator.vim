@@ -2,9 +2,11 @@ let s:optionWindowWidth = ['BufferNavigatorWidth', 40]
 let s:optionHighlightRules = ['BufferNavigatorHighlightRules', []]
 let s:optionMode = ['BufferNavigatorMode', 'tree']
 let s:optionMapKeys = ['BufferNavigatorMapKeys', 1]
+let s:optionAmbiguousDirNames = ['BufferNavigatorAmbiguousDirNames', []]
 
 let s:bufferLineMapping = {}
 let s:currentMode = get(g:,s:optionMode[0], s:optionMode[1])
+let s:ambigousDirNames = get(g:,s:optionAmbiguousDirNames[0], s:optionAmbiguousDirNames[1])
 let s:buffername = "buffer-navigator"
 let s:fileMarker = "\x07"
 let s:modifiedMarker = "\x06"
@@ -112,6 +114,20 @@ function! s:Focus()
   endif
 endfunction
 
+function! s:BuildMRUEntry(buffer)
+    let pathSegments = split(a:buffer.name, "/")
+
+    if len(pathSegments) == 1
+      return s:fileMarker . (a:buffer.modified ? s:modifiedMarker : "") . pathSegments[0]
+    endif
+
+    if len(pathSegments) == 2 || index(s:ambigousDirNames, pathSegments[-2]) == -1
+      return pathSegments[-2] . "/" . s:fileMarker . (a:buffer.modified ? s:modifiedMarker : "") . pathSegments[-1]
+    endif
+
+    return pathSegments[-3] . "/" . pathSegments[-2] . "/" . s:fileMarker . (a:buffer.modified ? s:modifiedMarker : "") . pathSegments[-1]
+endfunction
+
 function! s:PrintMRU()
   let s:bufferLineMapping = {}
   let bufferlist = s:BuildBufferList(1)
@@ -124,13 +140,7 @@ function! s:PrintMRU()
       continue
     endif
 
-    let pathSegments = split(buffer.name, "/")
-
-    if len(pathSegments) == 1
-      call add(lines, s:fileMarker . (buffer.modified ? s:modifiedMarker : "") . pathSegments[0])
-    else
-      call add(lines, pathSegments[-2] . "/" . s:fileMarker . (buffer.modified ? s:modifiedMarker : "") . pathSegments[-1])
-    endif
+    call add(lines, s:BuildMRUEntry(buffer))
 
     let s:bufferLineMapping[lineNr] = buffer.nr
     let lineNr += 1
