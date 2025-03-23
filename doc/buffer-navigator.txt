@@ -1,4 +1,4 @@
-*buffer-navigator.txt*                                            Version 2.1.0
+*buffer-navigator.txt*                                            Version 2.1.1
 
   ____         __  __                                 ~
  |  _ \       / _|/ _|                                ~
@@ -150,6 +150,8 @@ highlight BufferNavigatorDir                               *BufferNavigatorDir*
 ===============================================================================
 Changelog                                          *buffer-navigator-changelog*
 
+- 2.1.1
+  - Set `norelativenumber` in navigator window
 - 2.1.0
   - Add option to specify ambiguous directory names for the MRU mode
 - 2.0.1

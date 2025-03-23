@@ -1,3 +1,5 @@
+- 2.1.1
+  - Set `norelativenumber` in navigator window
 - 2.1.0
   - Add option to specify ambiguous directory names for the MRU mode
 - 2.0.1
